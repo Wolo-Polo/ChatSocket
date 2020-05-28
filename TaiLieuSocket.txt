@@ -1,0 +1,71 @@
+﻿Java network
+- lập trình mạng là viết ra những chương trình thực thi trên các thiết bị khác nhau thông qua kết nối mạng
+- ví dụ: chat onl sử dụng socket
+- sử dụng bộ thư viện java.net của Java
+
+Các khái niệm cơ bản:
+- IP address: là địa chỉ duy nhất của thiết bị khi kết nối vào mạng
+- protocol: các giao thức hay các luật lệ sử dụng khi truyền tải dữ liệu qua mạng: FTP, TCP, Telnet,...
+- Port Number: cổng vào ra dữ liệu trên thiết bị của ứng dụng
+- TCP: giao thức mạng định hướng, tin tưởng. Bên nhận sẽ gửi xác nhận lại cho bên gửi khi nhận dc các gói tin.
+- UDP: là giao thức mạng không định hướng, ít tin tưởng. Bên nhận và bên gửi không xác nhận khi nhận đc gói tin.
+- Socket: là 1 đối tượng kết nối để giúp truyền đạt dữ liệu theo 2 chiều.
+- RMI: là lời gọi hàm từ xa, sử dụng trong các ứng dụng phân tán. cho phép đối tượng từ xa gọi hàm trên các đối tượng ở một máy ảo java khác.
+
+URL class: trong package java.net.URL
+URL thuộc package java.net dùng để truy xuất các thông tin về một url website được đưa ra như giao thức, ip, tên miền,....
+- URL url= new URL("https://youtube.com/");
+- Các phương thức: getProtocol(), getHost(), getFile(), openConnection(),...
+
+URL Connection: URLConnection giúp bạn đọc nội dung website trong code java.
+Sử dụng để hiển thị nội dung trang web của một URL đưa ra. 
+- URL url= new URL("https://youtube.com/");
+- URLConnection urlConnection= url.openConnection();
+- InputStream inputStream= urlConnection.getInputStream();
+- đọc dữ liệu từ inputStream:
+	int i= inputStream.read();
+	while(i!=-1){
+		Systeam.out.print((char) i);
+		i= inputStream.read();
+	}
+
+HttpURLConnection: HttpURLConnection là một subclass của URLConnection trong bộ thư viện của java.net lập trình mạng.
+Thực thi các lời gọi trang web với giao thức HTTP trong Java.
+- URL url= new URL("https://youtube.com/");
+- HttpURLConnection httpURLConnection= (HttpURLConnection) url.openConnection();
+- for(int i=0; i<httpURLConnection.getHeaderFields().size(); i++){
+	System.out.println(httpURLConnection.getHeaderFieldsKey(i)+"= "+httpURLConnection.getHeaderField(i));
+	
+}
+
+InetAddress: dùng để truy xuất ip của 1 trang web
+- InetAddress inetAddress= new InetAddress.getByName("https://google.com.vn");
+- các phương thức: getHostName(), getHostAddress(),...
+
+Socket: Sử dụng java socket để viết chương trình truyền dữ liệu từ client lên server theo 2 chiều.
+Socket sử dụng giao thức TCP để truyền tải dữ liệu.
+- phía server:
+	+ tạo thể hiện lớp ServerSocket: ServerSocket serverSocket= new ServerSocket(6666); trong đó 6666 là cổng mở để kết nối
+	+ tạo thể hiện lớp Socket để nhận và gửi dữ liệu: Socket socket= serverSocket.accept();
+	+ tạo thể hiện lớp DataInputStream để nhận dữ liệu gửi tới:
+		DataInputStream dataInputStream= new DataInputStream(socket.getInputStream());
+		String data= dataInputStream.readUTF();//đọc dữ liệu vào biến data
+		System.out.print(data);//in ra
+	+ tạo thể hiện lớp DataOutputStream để gửi dữ liệu đi:
+		DataOutputStream dataOutputStream= new DataOutputStram(socket.getOutputStream());
+		String dataSend= "Du lieu gui di";
+		dataOutputStream.writeUTF(dataSend);
+		dataOutputStream.flush();// clean bộ đệm
+	+ đóng kết nối: dataInputStream.close(); dataOutputStream.close(); socket.close(); serverSocket.close();
+- phía client:
+	+ tạo thể hiện lớp Socket để nhận và gửi dữ liệu: Socket socket= new Socket("host", 6666);//host và cổng thay đổi tùy ý khớp với server là oki
+	+ tạo thể hiện lớp DataInputStream để nhận dữ liệu gửi tới:
+		DataInputStream dataInputStream= new DataInputStream(socket.getInputStream());
+		String data= dataInputStream.readUTF();//đọc dữ liệu vào biến data
+		System.out.print(data);//in ra
+	+ tạo thể hiện lớp DataOutputStream để gửi dữ liệu đi:
+		DataOutputStream dataOutputStream= new DataOutputStram(socket.getOutputStream());
+		String dataSend= "Du lieu gui di";
+		dataOutputStream.writeUTF(dataSend);
+		dataOutputStream.flush();// clean bộ đệm
+	+ đóng kết nối: dataInputStream.close(); dataOutputStream.close(); socket.close();
